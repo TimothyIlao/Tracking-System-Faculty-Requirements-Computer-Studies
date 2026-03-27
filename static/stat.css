@@ -1,0 +1,42 @@
+/* Register CSS*/
+.table-selection{
+    display:grid;
+    place-content: center;
+    height: 90vh;
+    color: white;
+    gap: 0.5rem;
+}
+.form-blackbox{
+    top: 45%;
+    left: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    place-content: center;
+    background-color: black;
+    width: 500px;
+    height: 350px;
+    z-index: -1;
+}
+.form-graybox{
+    top: 45%;
+    left: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    place-content: center;
+    background-color: rgb(88, 88, 88);
+    width: 515px;
+    height: 360px;
+    z-index: -2;
+}
+.form-username, .form-password, .form-email{
+    padding-left: 25px;
+}
+.form-submit{
+    padding-left: 75px;
+}
+#genderlabel{
+    padding-left: 2rem;
+}
+.form-gender{
+    padding-left: 30px;
+}

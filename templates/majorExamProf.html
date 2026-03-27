@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Professor | Grade Sheet</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='section1Prof.css') }}">
+
+    <!-- Icons -->
+     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- PDF.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+</head>
+
+<script>
+function updateDateTime() {
+    const now = new Date();
+
+    const options = {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    };
+
+    const date = now.toLocaleDateString(undefined, options);
+    const time = now.toLocaleTimeString();
+
+    document.getElementById("datetime").innerHTML = `${date} • ${time}`;
+}
+
+// Update every second
+setInterval(updateDateTime, 1000);
+
+// Initial call
+updateDateTime();
+
+if (!document.cookie.includes("session")) {
+    window.location.href = "/logintab";
+}
+</script>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+    
+    <!-- TOP SECTION -->
+    <div class="sidebar-top">
+        <button id="menu-btn">☰</button>
+    </div>
+
+    <a href="/dashboardProf">
+        <i class="fas fa-chart-line"></i>
+        <span>Dashboard</span>
+    </a>
+    <!-- MENU -->
+    <a href="/myClassesProf" class="active">
+        <i class="fas fa-chalkboard-teacher"></i>
+        <span>My Classes</span>
+    </a>
+    <div class="submenu visible" id="myClassesSubmenu">
+        <a href="/subject1Prof">Subject 1</a>
+    </div>
+    <div class="submenu visible" id="myClassesSubmenu">
+        <a href="/section1Prof">Requirements</a>
+    </div>
+    <a href="/logout">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Logout</span>
+    </a>
+
+    <!-- PROFILE (BOTTOM) -->
+    <div class="sidebar-profile">
+        <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png">
+        <div class="profile-info">
+            <span class="name">John Doe</span>
+            <span class="role">Professor</span>
+        </div>
+    </div>
+</div>
+
+<!-- MAIN -->
+<div class="main" id="main">
+    
+<!-- TOPBAR -->
+<div class="topbar">
+    <div>        
+        <h2>My Classes | Requirements | Submission</h2>
+        <p class="topbar-subtitle">Subject 1 | Section 1</p>
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="datetime" id="datetime"></div>
+</div>
+
+<div class="content">
+    <div class="grade-sheet-container">
+        <div class="grade-sheet-header">
+            <div>
+                <h3>Major Exam</h3>
+            </div>
+            <div class="deadline">
+                <p>Deadline: <span id="deadline-date">-</span></p>
+            </div>
+        </div>
+
+        <div class="upload-section">
+            <form id="uploadForm" class="upload-form">
+                <div class="upload-area" id="uploadArea">
+                    <p>Drag and drop your file here or click to select. (One file only)</p>
+                </div>
+                <input type="file" id="fileInput" style="display: none;">
+                <div class="button-group">
+                    <button type="button" class="upload-btn" id="uploadBtn">Upload</button>
+                    <button type="submit" class="submit-btn" id="submitBtn">Submit</button>
+                    <button type="button" class="unsubmit-btn" id="unsubmitBtn" style="display: none;">Unsubmit</button>
+                </div>
+            </form>
+        </div>
+
+
+        <!-- Submitted Status Message -->
+        <div class="submitted-status" id="submittedStatus" style="display: none;">
+            <p>File submitted successfully</p>
+        </div>
+    </div>
+
+    <!-- File Preview Modal -->
+    <div class="preview-modal" id="previewModal" style="display: none;">
+        <div class="preview-content">
+            <div class="preview-header">
+                <h3 id="previewTitle">File Preview</h3>
+                <button class="close-btn" id="closePreview">&times;</button>
+            </div>
+            <div class="preview-body" id="previewBody">
+                <!-- File content will be displayed here -->
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+<script>
+    const menuBtn = document.getElementById("menu-btn");
+    const sidebar = document.getElementById("sidebar");
+    const main = document.getElementById("main");
+    const uploadBtn = document.getElementById("uploadBtn");
+    const fileInput = document.getElementById("fileInput");
+    const uploadArea = document.getElementById("uploadArea");
+    const submitBtn = document.getElementById("submitBtn");
+    const unsubmitBtn = document.getElementById("unsubmitBtn");
+    const submittedStatus = document.getElementById("submittedStatus");
+    let uploadedFile = null;
+    let isSubmitted = false;
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+    menuBtn.addEventListener("click", () => {
+        sidebar.classList.toggle("collapsed");
+        main.classList.toggle("collapsed");
+    });
+
+    // Upload button click
+    uploadBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        fileInput.click();
+    });
+
+    // File selection
+    fileInput.addEventListener("change", (e) => {
+        if (e.target.files.length > 0) {
+            uploadedFile = e.target.files[0];
+            uploadArea.innerHTML = `<p>File selected: <strong>${uploadedFile.name}</strong></p>`;
+            // Change button text to "Replace"
+            uploadBtn.textContent = "Replace";
+            // Make it clickable to view
+            uploadArea.style.cursor = "pointer";
+        }
+    });
+
+    // Drag and drop
+    uploadArea.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        uploadArea.style.backgroundColor = "#f0f0f0";
+    });
+
+    uploadArea.addEventListener("dragleave", () => {
+        uploadArea.style.backgroundColor = "white";
+    });
+
+    uploadArea.addEventListener("drop", (e) => {
+        e.preventDefault();
+        uploadArea.style.backgroundColor = "white";
+        if (e.dataTransfer.files.length > 0) {
+            uploadedFile = e.dataTransfer.files[0];
+            uploadArea.innerHTML = `<p>File selected: <strong>${uploadedFile.name}</strong></p>`;
+            // Change button text to "Replace"
+            uploadBtn.textContent = "Replace";
+            // Make it clickable to view
+            uploadArea.style.cursor = "pointer";
+        }
+    });
+
+    // View file when clicking upload area
+    uploadArea.addEventListener("click", () => {
+        if (uploadedFile) {
+            viewFile();
+        }
+    });
+
+    // Function to view file
+    function viewFile() {
+        if (uploadedFile) {
+            const reader = new FileReader();
+            const fileType = uploadedFile.type;
+            const fileName = uploadedFile.name;
+
+            reader.onload = (e) => {
+                const previewBody = document.getElementById("previewBody");
+                const previewTitle = document.getElementById("previewTitle");
+                previewTitle.textContent = "Preview: " + fileName;
+
+                // Handle different file types
+                if (fileType.startsWith("image/")) {
+                    // Display image
+                    previewBody.innerHTML = `<img src="${e.target.result}" style="max-width: 100%; max-height: 500px;">`;
+                } else if (fileType === "application/pdf") {
+                    // For PDF, use PDF.js viewer
+                    const pdfData = new Uint8Array(e.target.result);
+                    pdfjsLib.getDocument(pdfData).promise.then(pdf => {
+                        previewBody.innerHTML = "";
+                        let currentPage = 1;
+                        
+                        const renderPage = (pageNum) => {
+                            pdf.getPage(pageNum).then(page => {
+                                const canvas = document.createElement("canvas");
+                                const context = canvas.getContext("2d");
+                                const viewport = page.getViewport({ scale: 1.5 });
+                                canvas.width = viewport.width;
+                                canvas.height = viewport.height;
+                                
+                                page.render({
+                                    canvasContext: context,
+                                    viewport: viewport
+                                }).promise.then(() => {
+                                    previewBody.innerHTML = "";
+                                    
+                                    const container = document.createElement("div");
+                                    container.style.textAlign = "center";
+                                    
+                                    container.appendChild(canvas);
+                                    
+                                    const controls = document.createElement("div");
+                                    controls.style.marginTop = "15px";
+                                    controls.style.display = "flex";
+                                    controls.style.justifyContent = "center";
+                                    controls.style.gap = "10px";
+                                    
+                                    if (pageNum > 1) {
+                                        const prevBtn = document.createElement("button");
+                                        prevBtn.textContent = "Previous";
+                                        prevBtn.style.padding = "8px 15px";
+                                        prevBtn.style.backgroundColor = "#14532d";
+                                        prevBtn.style.color = "white";
+                                        prevBtn.style.border = "none";
+                                        prevBtn.style.borderRadius = "5px";
+                                        prevBtn.style.cursor = "pointer";
+                                        prevBtn.onclick = () => renderPage(pageNum - 1);
+                                        controls.appendChild(prevBtn);
+                                    }
+                                    
+                                    const pageInfo = document.createElement("span");
+                                    pageInfo.textContent = `Page ${pageNum} of ${pdf.numPages}`;
+                                    pageInfo.style.padding = "8px 15px";
+                                    controls.appendChild(pageInfo);
+                                    
+                                    if (pageNum < pdf.numPages) {
+                                        const nextBtn = document.createElement("button");
+                                        nextBtn.textContent = "Next";
+                                        nextBtn.style.padding = "8px 15px";
+                                        nextBtn.style.backgroundColor = "#14532d";
+                                        nextBtn.style.color = "white";
+                                        nextBtn.style.border = "none";
+                                        nextBtn.style.borderRadius = "5px";
+                                        nextBtn.style.cursor = "pointer";
+                                        nextBtn.onclick = () => renderPage(pageNum + 1);
+                                        controls.appendChild(nextBtn);
+                                    }
+                                    
+                                    container.appendChild(controls);
+                                    previewBody.appendChild(container);
+                                });
+                            });
+                        };
+                        
+                        renderPage(currentPage);
+                    });
+                } else if (fileType.startsWith("text/") || fileType === "application/json") {
+                    // Display text content
+                    previewBody.innerHTML = `<pre style="background: #f5f5f5; padding: 15px; border-radius: 8px; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;">${escapeHtml(e.target.result)}</pre>`;
+                } else if (fileType.includes("spreadsheet") || fileType.includes("excel")) {
+                    // For spreadsheets
+                    previewBody.innerHTML = `<div style="text-align: center; padding: 40px;">
+                        <p>Spreadsheet File: ${fileName}</p>
+                        <p style="color: #999;">Spreadsheet preview requires a specialized viewer</p>
+                    </div>`;
+                } else {
+                    // Generic file type
+                    previewBody.innerHTML = `<div style="text-align: center; padding: 40px;">
+                        <p>File: ${fileName}</p>
+                        <p style="color: #999;">File type: ${fileType || 'Unknown'}</p>
+                    </div>`;
+                }
+
+                // Show modal
+                document.getElementById("previewModal").style.display = "flex";
+            };
+
+            if (fileType === "application/pdf") {
+                reader.readAsArrayBuffer(uploadedFile);
+            } else {
+                reader.readAsDataURL(uploadedFile);
+            }
+        }
+    }
+
+    // Helper function to escape HTML
+    function escapeHtml(text) {
+        const div = document.createElement("div");
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // Close preview modal
+    document.getElementById("closePreview").addEventListener("click", () => {
+        document.getElementById("previewModal").style.display = "none";
+    });
+
+    // Close modal when clicking outside
+    document.getElementById("previewModal").addEventListener("click", (e) => {
+        if (e.target.id === "previewModal") {
+            document.getElementById("previewModal").style.display = "none";
+        }
+    });
+
+    // Form submission
+    document.getElementById("uploadForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (uploadedFile && !isSubmitted) {
+            // Mark as submitted
+            isSubmitted = true;
+            
+            // Hide upload button and show unsubmit button
+            uploadBtn.style.display = "none";
+            submitBtn.style.display = "none";
+            unsubmitBtn.style.display = "inline-block";
+            
+            // Show submitted status message
+            submittedStatus.style.display = "block";
+        }
+    });
+
+    // Unsubmit button
+    unsubmitBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        if (isSubmitted) {
+            // Mark as not submitted
+            isSubmitted = false;
+            
+            // Show upload button and hide unsubmit button
+            uploadBtn.style.display = "inline-block";
+            uploadBtn.textContent = "Replace"; // Keep as Replace since file still exists
+            submitBtn.style.display = "inline-block";
+            unsubmitBtn.style.display = "none";
+            
+            // Hide submitted status message
+            submittedStatus.style.display = "none";
+        }
+    });
+</script>

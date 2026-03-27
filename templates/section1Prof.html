@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Subject 1 | Section 1</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='section1Prof.css') }}">
+
+    <!-- Icons -->
+     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<script>
+function updateDateTime() {
+    const now = new Date();
+
+    const options = {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    };
+
+    const date = now.toLocaleDateString(undefined, options);
+    const time = now.toLocaleTimeString();
+
+    document.getElementById("datetime").innerHTML = `${date} • ${time}`;
+}
+
+// Update every second
+setInterval(updateDateTime, 1000);
+
+// Initial call
+updateDateTime();
+
+if (!document.cookie.includes("session")) {
+    window.location.href = "/logintab";
+}
+</script>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+    
+    <!-- TOP SECTION -->
+    <div class="sidebar-top">
+        <button id="menu-btn">☰</button>
+    </div>
+
+    <a href="/dashboardProf">
+        <i class="fas fa-chart-line"></i>
+        <span>Dashboard</span>
+    </a>
+    <!-- MENU -->
+    <a href="/myClassesProf" class="active" id="myClassesButton">
+        <i class="fas fa-chalkboard-teacher"></i>
+        <span>My Classes</span>
+    </a>
+    <div class="submenu visible" id="myClassesSubmenu">
+        <a href="/subject1Prof">Subject 1</a>
+    </div>
+    <a href="/logout">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Logout</span>
+    </a>
+
+    <!-- PROFILE (BOTTOM) -->
+    <div class="sidebar-profile">
+        <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png">
+        <div class="profile-info">
+            <span class="name">John Doe</span>
+            <span class="role">Professor</span>
+        </div>
+    </div>
+</div>
+
+<!-- MAIN -->
+<div class="main" id="main">
+    
+<!-- TOPBAR -->
+<div class="topbar">
+    <div>
+        <h2>My Classes | Requirements</h2>
+        <p class="topbar-subtitle">Subject 1 | Section 1</p>
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="datetime" id="datetime"></div>
+</div>
+
+<div class="content">
+    <div class="card-container">
+        <a href="/gradeSheetProf" class="card">
+            <h3>Grade Sheet</h3>
+        </a>
+        <a href="/classRecordProf" class="card">
+            <h3>Class Record</h3>
+        </a>
+        <a href="/examProf" class="card">
+            <h3>Exam</h3>
+        </a>
+        <a href="/portfolioProf" class="card">
+            <h3>Portfolio</h3>
+        </a>
+        <a href="/majorExamProf" class="card">
+            <h3>Major Exam</h3>
+        </a>
+        <a href="/sampleQuizProf" class="card">
+            <h3>Sample Quiz</h3>
+        </a>
+        <a href="/finalsProf" class="card">
+            <h3>Finals</h3>
+        </a>
+        <a href="/sampleExamProf" class="card">
+            <h3>Sample Exam</h3>
+        </a>
+        <a href="/midtermsProf" class="card">
+            <h3>Midterms</h3>
+        </a>
+        <a href="/coreSyllabus" class="card">
+            <h3>Core Syllabus</h3>
+        </a>
+    </div>
+    
+</div>
+
+<script>
+    const menuBtn = document.getElementById("menu-btn");
+    const sidebar = document.getElementById("sidebar");
+    const main = document.getElementById("main");
+
+    menuBtn.addEventListener("click", () => {
+        sidebar.classList.toggle("collapsed");
+        main.classList.toggle("collapsed");
+    });
+</script>
