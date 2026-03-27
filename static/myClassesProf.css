@@ -1,0 +1,287 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    display: flex;
+    background: #f4f6f5;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 220px;
+    height: 100vh;
+    background: #14532d;
+    color: white;
+    padding: 10px;
+    position: fixed;
+    transition: 0.3s;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar h2 {
+    margin-bottom: 28px;
+    margin-top: 20px;
+    margin-left: 9px;
+    font-size: 30px;
+}
+
+.sidebar a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 8px;
+}
+
+.sidebar a i {
+    width: 20px;
+    text-align: center;
+}
+
+.sidebar a.active {
+    background: white;
+    color: #14532d;
+    font-weight: bold;
+}
+
+.sidebar a.active:hover {
+    background: white;
+}
+
+.sidebar a:hover {
+    background: #166534;
+}
+
+.sidebar p{
+    padding: 10px;
+    margin: 10px 0;
+    background-color: rgba(255, 255, 255);
+    border-radius: 9px;
+    color: #166534;
+    font-weight: bold;
+}
+
+/* SIDEBAR STRUCTURE */
+.sidebar {
+    display: flex;
+    flex-direction: column;
+}
+
+/* PUSH PROFILE TO BOTTOM */
+.sidebar-profile {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.2);
+}
+
+/* IMAGE */
+.sidebar-profile img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* TEXT */
+.profile-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-info .name {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.profile-info .role {
+    font-size: 12px;
+    color: #d1d5db;
+}
+
+/* TOPBAR */
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0px;
+    margin-bottom: 20px;
+    transition: padding 0.3s, transform 0.3s;
+}
+
+.topbar h2 {
+    margin: 0;
+    transition: margin 0.3s, transform 0.3s;
+}
+
+.topbar-subtitle {
+    font-weight: 400;
+    font-size: 18px;
+    margin: 0;
+    color: #000000;
+}
+
+/* ADJUST TOPBAR WHEN SIDEBAR COLLAPSES */
+.main.collapsed .topbar {
+    padding: 10px 0px;
+}
+
+/* Keep Dashboard text position fixed when sidebar toggles */
+.main.collapsed .topbar h2 {
+    margin-left: 0;
+    transform: none;
+}
+
+#menu-btn {
+    font-size: 20px;
+    color: white;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* DATE & TIME */
+.datetime {
+    font-size: 14px;
+    font-weight: 500;
+    color: #14532d;
+    margin-right: 2px;
+}
+
+/* SIDEBAR COLLAPSE */
+.sidebar {
+    width: 220px;
+    transition: width 0.3s;
+    overflow: hidden;
+}
+
+.sidebar.collapsed {
+    width: 70px;
+}
+
+/* HIDE TEXT WHEN COLLAPSED */
+.sidebar.collapsed span {
+    display: none;
+}
+
+/* CENTER ICONS WHEN COLLAPSED */
+.sidebar.collapsed a {
+    text-align: center;
+    padding: 10px 5px;
+}
+
+/* CENTER PROFILE IMAGE WHEN COLLAPSED */
+.sidebar.collapsed .sidebar-profile {
+    justify-content: center;
+}
+
+/* HIDE PROFILE INFO WHEN COLLAPSED */
+.sidebar.collapsed .profile-info {
+    display: none;
+}
+
+/* MAIN CONTENT */
+.main {
+    margin-left: 240px;
+    padding: 20px;
+    width: calc(100% - 240px);
+    transition: margin-left 0.3s, width 0.3s;
+}
+
+.main.collapsed {
+    margin-left: 90px;
+    width: calc(100% - 90px);
+}
+
+/* HEADER AND CARD TRANSITION */
+.header,
+.cards,
+.card {
+    transition: width 0.3s, transform 0.3s;
+}
+
+.main.collapsed .header,
+.main.collapsed .cards {
+    width: 100%;
+}
+
+.header {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border-left: 6px solid #eab308;
+}
+
+/* CARDS */
+.cards {
+    display: flex;
+    gap: 20px;
+}
+
+.card {
+    flex: 1;
+    background: #14532d;
+    color: white;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    text-decoration: none;
+}
+
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+.card i {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    color: #fbbf24;
+}
+
+/* TABLE */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+table th {
+    background: #14532d;
+    color: white;
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+}
+
+table td {
+    padding: 12px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+table tr:hover {
+    background: #f5f5f5;
+}
+
+/* FOOTER */
+.footer {
+    margin-top: 50px;
+    text-align: center;
+    color: #999;
+    font-size: 12px;
+}

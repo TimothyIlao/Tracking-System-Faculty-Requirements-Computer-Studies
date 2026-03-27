@@ -1,0 +1,85 @@
+body{
+    height: 100vh;
+    background: url('images/loginbgs.png') no-repeat center center/cover;
+    display: flex;
+    flex-direction: column;
+}
+.table-selection{
+    display:grid;
+    align-items: center;
+    place-content: center;
+    height: 90vh;
+    gap: 0.5rem;
+} 
+.bgcolor-black{
+    position: absolute;
+    top: 45%; 
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #006900;
+    padding: 50px;
+    width: 250px;
+    height: 200px;
+    z-index: -1;
+}
+.bgcolor-gray{
+    
+    position: absolute;
+    top: 45%; 
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: gray;
+    padding: 50px;
+    width: 275px;
+    height: 225px;
+    z-index: -2;
+}
+/*Forms*/
+.form-username,
+.form-password,
+.form-forgotpass,
+.form-submit{
+    text-align: center;
+    cursor: pointer;
+}
+
+.form-register a{
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+}
+.form-forgotpass a{
+    color: #006900;
+    text-decoration: none;
+    padding-left: 0px;
+}
+.form-forgotpass:hover a{
+    color: rgb(126, 2, 2);
+}
+.form-regislink:hover{
+    transition: 1s;
+    color: rgb(126, 2, 2);
+}
+.line1 {
+    border: none;
+    height: 2px;
+    background-color: rgb(255, 255, 255);
+    margin:0;
+
+}
+.errormensahe{
+    background-color:#000000;
+    color:rgb(179, 8, 8);
+    padding:20px;
+    text-align:center;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    font-weight:bold;
+    font-size: 20px;
+}
+.g-recaptcha{
+    transform: scale(0.7);
+    transform-origin: center;
+}
